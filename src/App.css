@@ -9,5 +9,5 @@ src: local('SEGA'), url('SEGA.woff') format('woff');
 h1 {
     font-family: 'SEGA';
     font-weight: 200;
-    color:lightgrey;
+    color: rgb(133, 223, 229);
 }
