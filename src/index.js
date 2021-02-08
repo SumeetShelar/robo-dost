@@ -4,9 +4,16 @@ import './index.css';
 import App from './container/App';
 import reportWebVitals from './reportWebVitals';
 import 'tachyons';
+import { createStore } from 'redux';
+import { searchRobots } from './reducers';
+import { Provider } from 'react-redux';
+
+const store = createStore(searchRobots)
 
 ReactDOM.render(
-  <App />
+  <Provider store={store}>
+    <App />
+  </Provider>
   ,document.getElementById('root')
 );
 

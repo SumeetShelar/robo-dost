@@ -4,13 +4,26 @@ import SearchBox from '../components/SearchBox'
 import Scroll from '../components/Scroll'
 import ErrorBoundry from "../components/ErrorBoundry";
 import './App.css'
+import { setSearchField } from '../actions';
+import { connect }  from 'react-redux'
+
+const mapStateToProps = state => {
+    return {
+        searchField: state.searchField
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSearchChange: (event) => dispatch(setSearchField(event.target.value))
+    }
+}
 
 class App extends Component {
     constructor(){
         super()
         this.state = {
             robots: [],
-            searchField: ""
         }
     }
 
@@ -20,30 +33,26 @@ class App extends Component {
         .then(users => this.setState({ robots: users }));
     }
 
-    onSearchChange = (event) => {
-        this.setState({searchField: event.target.value})
-    }
-
     render() {
-        const filteredRobots = this.state.robots.filter(robo => {
-            return robo.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-        })
-        if (this.state.robots.length === 0){
-            return <h1>LOADING....</h1>
-        }else {
-            return(
-                <div className="tc">
-                    <h1 className="f1">RoboDost</h1>
-                    <SearchBox searchChange={this.onSearchChange}/>
-                    <Scroll>
-                        <ErrorBoundry>
-                            <CardList robots={ filteredRobots } />
-                        </ErrorBoundry>
-                    </Scroll>
-                </div>
-            )
-        }
+        const { robots } = this.state;
+        const { searchField, onSearchChange } = this.props;
+        const filteredRobots = robots.filter(robo => {
+            return robo.name.toLowerCase().includes(searchField.toLowerCase());
+        })            
+        return !robots.length ? 
+            <h1>LOADING...</h1> :
+        (
+            <div className="tc">
+                <h1 className="f1">RoboDost</h1>
+                <SearchBox searchChange={onSearchChange}/>
+                <Scroll>
+                    <ErrorBoundry>
+                        <CardList robots={ filteredRobots } />
+                    </ErrorBoundry>
+                </Scroll>
+            </div>
+        )    
     }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
